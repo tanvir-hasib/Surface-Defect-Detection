@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    image: mvtec-patchcore-api:latest
+    container_name: mvtec-patchcore-api
+    ports:
+      - "8000:8000"
+    environment:
+      BACKEND: ${BACKEND:-trt}            # trt | ort-cuda | ort-cpu
+      PRECISION: ${PRECISION:-fp16}       # fp16 | fp32
+      CATEGORIES: ${CATEGORIES:-all}      # e.g. "bottle,screw" to start faster
+      MAX_BATCH: ${MAX_BATCH:-1}
+    volumes:
+      - ../artifacts/models:/models:ro    # written by the notebook (Step 6)
+      - engine-cache:/cache               # TensorRT engines survive restarts
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["${GPU_ID:-0}"]   # nvidia-smi index; e.g. GPU_ID=1 docker compose up -d
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  engine-cache:

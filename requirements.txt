@@ -1,0 +1,15 @@
+torch
+torchvision
+onnx
+onnxscript
+onnxruntime-gpu[cuda,cudnn]
+tensorrt-cu13
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+pillow
+tqdm
+requests
+ipykernel
